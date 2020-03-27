@@ -1,4 +1,5 @@
 
 export const routes = {
-  templates: 'templates'
+  templates: 'templates',
+  dictionaries: 'dictionaries'
 };

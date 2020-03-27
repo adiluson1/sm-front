@@ -3,6 +3,11 @@ import App from '@/App.tsx'
 import './registerServiceWorker'
 import router from './router'
 import AntDesignVue from 'ant-design-vue'
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
+import '@mdi/font/css/materialdesignicons.css'
+
+Vue.use(Buefy)
 
 import {i18n} from "@/lang";
 
