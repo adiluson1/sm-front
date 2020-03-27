@@ -8,7 +8,7 @@ export default class One extends Vue {
     render() {
         return(
             <div>
-                
+
             </div>
         )
     }
