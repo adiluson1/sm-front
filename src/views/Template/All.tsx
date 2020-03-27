@@ -10,7 +10,7 @@ export default class All extends Vue {
 
     async mounted() {
         let res = await Server.get(routes.templates);
-        console.log(res);
+        this.templates = await res.json();
     }
 
     render() {
