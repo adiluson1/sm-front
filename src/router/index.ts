@@ -24,28 +24,40 @@ const routes = [
         path: 'add',
         name: 'AddTemplates',
         component: (): any => import('@/views/Template/Add')
+      },
+      {
+        path: ':id',
+        name: 'OneTemplate',
+        component: (): any => import('@/views/Template/Main'),
+        children: [
+          {
+            path: '/',
+            name: 'OneTemplateBody',
+            component: (): any => import('@/views/Template/One')
+          },
+          {
+            path: 'add-column',
+            name: 'AddColumnForTemplate',
+            component: (): any => import('@/views/Template/AddColumn')
+          }
+        ]
       }
     ]
   },
   {
-    path: "/dictionary",
-    name: "Dictionary",
-    component: (): any => import('@/views/Dictionary/Main'),
+    path: "/column",
+    name: "Column",
+    component: (): any => import('@/views/Column/Main'),
     children: [
       {
-        path: "all",
-        name: "AllDictionary",
-        component: (): any => import('@/views/Dictionary/All')
+        path: 'all',
+        name: 'AllColumns',
+        component: (): any => import('@/views/Column/All')
       },
       {
-        path: "add",
-        name: "AddDictionary",
-        component: (): any => import('@/views/Dictionary/Add')
-      },
-      {
-        path: ":id",
-        name: "OneDictionary",
-        component: (): any => import('@/views/Dictionary/One')
+        path: 'add',
+        name: 'AddColumns',
+        component: (): any => import('@/views/Column/Add')
       }
     ]
   }

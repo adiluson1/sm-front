@@ -4,16 +4,19 @@ import {Server} from "@/service/Server";
 import {routes} from "@/service/routes";
 import { HeadComponent} from "@/components/HeadComponent";
 import TableInput from "@/components/Table/TableInput";
+import Card from "@/components/Card";
+import {Pagination} from "@/service/Pagination";
 
 @Component({
     components: {
         HeadComponent,
-        TableInput
+        TableInput,
+        Card
     }
 })
 export default class All extends Vue {
 
-    templates: Template[] = [];
+    templates: Pagination<Template> = new Pagination<Template>([]);
 
     async mounted() {
         await this.init()
@@ -27,14 +30,14 @@ export default class All extends Vue {
     async delete(id: number) {
         try {
             await Server.delete(routes.templates,id);
-            let index = this.templates.findIndex(temp=> temp.id === id)
-            if (index > -1) this.templates.splice(index,1)
+            let index = this.templates.items.findIndex(temp=> temp.id === id);
+            if (index > -1) this.templates.items.splice(index,1);
         } catch (e) {
             console.error(e.message)
         }
     }
     async update(e: any) {
-        let template: any = this.templates.find(temp=> temp.id === e.id);
+        let template: any = this.templates.items.find(temp=> temp.id === e.id);
         if (template) {
             let oldTemplate = JSON.parse(JSON.stringify(template));
             template[e.type] = e.value;
@@ -56,38 +59,39 @@ export default class All extends Vue {
                         </router-link>
                     </template>
                 </head-component>
-                <div class="card">
-                    <div class="card-content">
-                        <table class="table">
-                            <tr>
-                                <th>{this.$t('table.id')}</th>
-                                <th>{this.$t('table.name')}</th>
-                                <th>{this.$t('table.actions')}</th>
-                            </tr>
-                            {
-                                this.templates.map(template => {
-                                    return <tr>
-                                        <td>{template.id}</td>
-                                        <td>
-                                            <table-input
-                                                value={template.name}
-                                                type="name"
-                                                id={template.id}
-                                                onChanged={(e: any) => this.update(e)}
-                                            />
-                                        </td>
-                                        <td>
-                                            <span
-                                                onclick={() => this.delete(template.id)}>
-                                                <b-icon icon="delete"/>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                })
-                            }
-                        </table>
-                    </div>
-                </div>
+                <card>
+                    <table class="table">
+                        <tr>
+                            <th>{this.$t('table.id')}</th>
+                            <th>{this.$t('table.name')}</th>
+                            <th>{this.$t('table.actions')}</th>
+                        </tr>
+                        {
+                            this.templates.items.map(template => {
+                                return <tr>
+                                    <td>{template.id}</td>
+                                    <td>
+                                        <table-input
+                                            value={template.name}
+                                            type="name"
+                                            id={template.id}
+                                            onChanged={(e: any) => this.update(e)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <span
+                                            onclick={() => this.delete(template.id)}>
+                                            <b-icon icon="delete"/>
+                                        </span>
+                                        <router-link to={`/template/${template.id}`}>
+                                            <b-icon icon="eye"/>
+                                        </router-link>
+                                    </td>
+                                </tr>
+                            })
+                        }
+                    </table>
+                </card>
             </div>
         )
     }

@@ -1,15 +1,16 @@
 export const ru = {
     template:{
         templates: 'Шаблоны',
-        add: 'Создать шаблон'
+        template: 'Шаблон',
+        add: 'Создать шаблон',
+        addColumnHead: 'Добавить столбцы в шаблон {name}',
+        createColumnHead: 'Добавить столбец в шаблон {name}'
     },
     column: {
       columns: 'Столбцы',
-        column: "Столбец"
-    },
-    dictionary: {
-        dictionaries: 'Словари',
-        dictionary: 'Словарь'
+        column: "Столбец",
+        cellType: "Тип значений",
+        columnType: "Тип колонки"
     },
     table: {
         id: '№',
@@ -20,5 +21,18 @@ export const ru = {
         add: "Добавить",
         create: "Создать",
         delete: "Удалить"
+    },
+    cellType: {
+        INTEGER: "Натуралное чисто",
+        DOUBLE: "Число с плавающей точкой",
+        VARCHAR: "Строка",
+        TEXT: "Текст",
+        BOOLEAN: "Да или Нет"
+    },
+    columnType: {
+        SIMPLE: "Обычный",
+        TREE: "Дерево",
+        LINK: "Ссылка на шаблон",
+        CONVERTER: "Конвертор"
     }
 };

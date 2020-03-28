@@ -17,18 +17,21 @@ import {Pagination} from "@/service/Pagination";
 export default class Add extends Vue {
 
     form: FormContainer<Col> = new FormContainer<Col>(new Col());
-    templates: Pagination<Template> = new Pagination<Template>([]);
+    template: Template = new Template();
 
     async create() {
         let data = this.form.copyData();
+        data.template = this.template;
         let res = await Server.post(routes.columns,data);
         if (res.ok) return this.$router.back();
         console.log(res.json())
     }
 
     async mounted() {
-        let res = await Server.get(routes.templates);
-        this.templates = await res.json();
+        let id = this.$route.params.id;
+        let res = await Server.get(`${routes.templates}/ ${id}`);
+        this.template = await res.json();
+        this.template.columns = []
     }
 
 
@@ -37,22 +40,11 @@ export default class Add extends Vue {
             <div>
                 <head-component
                     onBack={() => this.$router.back()}>
-                    {`${this.$t('action.add')} ${this.$t('column.column')}`}
+                    {this.$t('template.createColumnHead',{name: this.template.name})}
                 </head-component>
                 <card>
                     <b-field horizontal label={this.$t('table.name')}>
                         <b-input name="subject" v-model={this.form.data.name}/>
-                    </b-field>
-                    <b-field horizontal label={this.$t('template.template')}>
-                        <b-select v-model={this.form.data.template}>
-                            {
-                                this.templates.items.map(temp => {
-                                    return <option value={temp}>
-                                        {temp.name}
-                                    </option>
-                                })
-                            }
-                        </b-select>
                     </b-field>
                     <b-field horizontal label={this.$t('column.columnType')}>
                         <b-select v-model={this.form.data.columnType}>
@@ -102,3 +94,4 @@ export default class Add extends Vue {
         )
     }
 }
+

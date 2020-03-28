@@ -8,6 +8,10 @@ export class Template {
     id: number;
     name: string;
     rows?: Row[];
-    columns?: Col[];
+    columns: Col[];
     cells?: Cell[];
+
+    constructor() {
+        this.columns = []
+    }
 }

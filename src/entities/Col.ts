@@ -1,3 +1,5 @@
+import {Template} from "@/entities/Template";
+
 export enum CellType {
     INTEGER,
     DOUBLE,
@@ -9,7 +11,7 @@ export enum CellType {
 export enum ColumnType {
     SIMPLE,
     TREE,
-    DICTIONARY,
+    LINK,
     CONVERTER
 }
 
@@ -17,10 +19,11 @@ export enum ColumnType {
 
 export class Col {
 
-    constructor(
-        id: number = 0,
-        name: string = '',
-        createdAt: string,
-        updatedAt: string,
-    ) {}
+    id: number;
+    name: string;
+    cellType: CellType;
+    columnType: ColumnType;
+    template: Template;
+    createdAt: string;
+    updatedAt: string;
 }

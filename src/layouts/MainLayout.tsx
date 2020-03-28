@@ -22,8 +22,8 @@ export default class MainLayout extends Vue {
                             </a-menu-item>
                             <a-menu-item key={2}>
                                 <a-icon type="video-camera"/>
-                                <span>{this.$t('dictionary.dictionaries')}</span>
-                                <router-link to="/dictionary/all"/>
+                                <span>{this.$t('column.columns')}</span>
+                                <router-link to="/column/all"/>
                             </a-menu-item>
                             <a-menu-item key={3}>
                                 <a-icon type="upload"/>

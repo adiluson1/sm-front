@@ -1,7 +1,6 @@
 import {Row} from "@/entities/Row";
 import {Col} from "@/entities/Col";
 import {Tree} from "@/entities/Tree";
-import {DictionaryValue} from "@/entities/DictionaryValue";
 import {ConverterValue} from "@/entities/ConverterValue";
 
 export class Cell {
@@ -16,7 +15,6 @@ export class Cell {
         public row?: Row,
         public column?: Col,
         public tree?: Tree,
-        public dictionaryValue?: DictionaryValue,
         public converterValue?: ConverterValue,
         public createdAt?: string,
         public updatedAt?: string
