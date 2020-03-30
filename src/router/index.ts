@@ -27,7 +27,6 @@ const routes = [
       },
       {
         path: ':id',
-        name: 'OneTemplate',
         component: (): any => import('@/views/Template/Main'),
         children: [
           {

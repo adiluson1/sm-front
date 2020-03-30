@@ -35,7 +35,7 @@ export default class TableInput extends Vue {
         return(
             <div>
                 {
-                    this.isInput ?
+                    (this.isInput || this.localValue == "") ?
                         <b-field>
                             <b-input v-model={this.localValue}/>
                             <p class="control">

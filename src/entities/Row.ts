@@ -5,6 +5,10 @@ import {Cell} from "./Cell";
 export class Row {
 
     id: number;
-    template?: Template;
-    cells?: Cell[];
+    template: Template;
+    cells: Cell[];
+
+    constructor() {
+        this.cells = []
+    }
 }

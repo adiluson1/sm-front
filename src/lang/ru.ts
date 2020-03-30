@@ -4,7 +4,10 @@ export const ru = {
         template: 'Шаблон',
         add: 'Создать шаблон',
         addColumnHead: 'Добавить столбцы в шаблон {name}',
-        createColumnHead: 'Добавить столбец в шаблон {name}'
+        createColumnHead: 'Добавить столбец в шаблон {name}',
+        button: {
+            addRow: "Добавить строку"
+        }
     },
     column: {
       columns: 'Столбцы',

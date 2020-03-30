@@ -7,11 +7,13 @@ export class Template {
 
     id: number;
     name: string;
-    rows?: Row[];
+    rows: Row[];
     columns: Col[];
-    cells?: Cell[];
+    cells: Cell[];
 
     constructor() {
-        this.columns = []
+        this.columns = [];
+        this.cells = [];
+        this.rows = [];
     }
 }
