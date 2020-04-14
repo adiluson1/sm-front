@@ -6,6 +6,7 @@ import { HeadComponent} from "@/components/HeadComponent";
 import TableInput from "@/components/Table/TableInput";
 import Card from "@/components/Card";
 import {Pagination} from "@/service/Pagination";
+import {getCurrentDateStr} from "@/functions/Date";
 
 @Component({
     components: {
@@ -53,7 +54,7 @@ export default class All extends Vue {
             rows.push([template.id,template.name])
         }
         await Excel.run(async (context) => {
-            let newSheet = context.workbook.worksheets.add('Template' + getDateStr());
+            let newSheet = context.workbook.worksheets.add('Template' + getCurrentDateStr());
             let range = newSheet.getRangeByIndexes(0,0,rows.length,headers.length);
             range.values = rows;
             await context.sync()
@@ -110,12 +111,4 @@ export default class All extends Vue {
             </div>
         )
     }
-}
-
-function getDateStr() {
-    let date = new Date();
-    return date.getHours().toString() + ' ' +
-        + date.getMinutes().toString() + ' ' +
-        + date.getSeconds().toString() + ' ' +
-        + date.getMilliseconds().toString();
 }
