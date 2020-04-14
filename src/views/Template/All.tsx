@@ -45,6 +45,20 @@ export default class All extends Vue {
             if (!res.ok) template = oldTemplate
         }
     }
+    async writeToExcel() {
+        let rows:any[][] = [];
+        let headers = ['id','name'];
+        rows.push(headers);
+        for (let template of this.templates.items) {
+            rows.push([template.id,template.name])
+        }
+        await Excel.run(async (context) => {
+            let newSheet = context.workbook.worksheets.add('Template' + getDateStr());
+            let range = newSheet.getRangeByIndexes(0,0,rows.length,headers.length);
+            range.values = rows;
+            await context.sync()
+        })
+    }
 
     render() {
         return (
@@ -52,11 +66,12 @@ export default class All extends Vue {
                 <head-component
                     onBack={() => this.$router.back()}>
                     {this.$t('template.templates')}
-                    <template slot="left">
+                    <template slot="left" class="buttons">
                         <router-link to="/template/add" class="button is-success">
                             <b-icon icon="plus"/>
                             <span>{this.$t('action.add')}</span>
                         </router-link>
+                        <b-button onclick={this.writeToExcel}>write to excel</b-button>
                     </template>
                 </head-component>
                 <card>
@@ -95,4 +110,12 @@ export default class All extends Vue {
             </div>
         )
     }
+}
+
+function getDateStr() {
+    let date = new Date();
+    return date.getHours().toString() + ' ' +
+        + date.getMinutes().toString() + ' ' +
+        + date.getSeconds().toString() + ' ' +
+        + date.getMilliseconds().toString();
 }

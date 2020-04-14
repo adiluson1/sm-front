@@ -1,3 +1,4 @@
+/// <reference types="@types/office-js"/>
 import Vue from 'vue'
 import App from '@/App.tsx'
 import './registerServiceWorker'
@@ -16,8 +17,12 @@ import 'ant-design-vue/dist/antd.css';
 Vue.config.productionTip = false;
 Vue.use(AntDesignVue);
 
-
-new Vue({
+try {
+  Office.onReady(async context => context)
+}catch (e) {
+  console.log(e)
+}
+export default new Vue({
   router,
   i18n,
   render: h => h(App)
