@@ -1,10 +1,16 @@
-import {action, computed, observable, runInAction} from "mobx";
+import {action, computed, observable, runInAction,toJS} from "mobx";
 import {Pagination} from "@/service/Pagination";
 import {Row} from "@/entities/Row";
 import {Template} from "@/entities/Template";
 import {Cell} from "@/entities/Cell";
 import {routes} from "@/service/routes";
 import {Server} from "@/service/Server";
+import MainWorkerPrivider from "@/worker/providers/MainWorkerProvider";
+import {ApiToExcelAdapterWorker} from "@/worker";
+import {Col} from "@/entities/Col";
+import {ApiToExcelAdapterWorkerProps} from "@/props/ApiToExcelAdapterWorkerProps";
+import context = Office.context;
+import {getCurrentDateStr} from "@/functions/Date";
 
 
 export class TemplateMobx {
@@ -12,6 +18,16 @@ export class TemplateMobx {
     @observable rows: Pagination<Row> = new Pagination<Row>([]);
     @observable newRow: Row = new Row();
     @observable hasNewRow: boolean = false;
+
+    @computed
+    get copyColumns() {
+        return JSON.parse(JSON.stringify(this.template.columns))
+    }
+
+    @computed
+    get copyRows() {
+        return JSON.parse(JSON.stringify(this.rows))
+    }
 
     @action.bound
     async init(id: string | number) {
@@ -154,6 +170,29 @@ export class TemplateMobx {
             this.template = newTemplate;
         })
         await this.getRowsByTemplateId(id);
+    }
+
+    @action.bound
+    async writeToExcel() {
+        let provider = new MainWorkerPrivider();
+        let worker = new ApiToExcelAdapterWorker();
+        let columns: Col[] = toJS(this.template.columns,{recurseEverything: true});
+        let rows = toJS(this.rows.items,{recurseEverything: true});
+        let includes = columns.map(col => col.id);
+        let args = {
+            rows,
+            columns,
+            includes
+        };
+        let result = await provider.connect(worker,args);
+        await Excel.run(async context => {
+            let templateName = this.template.name;
+            let sheetName = templateName + getCurrentDateStr();
+            let sheet = context.workbook.worksheets.add(sheetName);
+            let range = sheet.getRangeByIndexes(0,0,result.length,result[0].length);
+            range.values = result;
+            await range.context.sync();
+        })
     }
 }
 

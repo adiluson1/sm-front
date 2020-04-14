@@ -1,4 +1,5 @@
 import {Template} from "@/entities/Template";
+import {Cell} from "@/entities/Cell";
 
 export enum CellType {
     INTEGER,
@@ -27,3 +28,23 @@ export class Col {
     createdAt: string;
     updatedAt: string;
 }
+
+export const cellTypeStr = (cellType: CellType):string => {
+
+    switch (cellType) {
+        case CellType.VARCHAR:
+            return 'varcharVal';
+        case CellType.INTEGER:
+            return 'intVal';
+        case CellType.BOOLEAN:
+            return 'booleanVal';
+        case CellType.DOUBLE:
+            return 'doubleVal';
+        case CellType.TEXT:
+            return 'textVal';
+        default:
+            return ''
+    }
+};
+
+

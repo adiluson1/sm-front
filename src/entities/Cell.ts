@@ -1,5 +1,5 @@
 import {Row} from "@/entities/Row";
-import {Col} from "@/entities/Col";
+import {CellType, Col} from "@/entities/Col";
 import {Tree} from "@/entities/Tree";
 import {ConverterValue} from "@/entities/ConverterValue";
 import {Template} from "@/entities/Template";
@@ -25,3 +25,20 @@ export class Cell {
     }
 
 }
+
+export const getCellValue = (cell: Cell) => {
+    switch (cell.column.cellType) {
+        case CellType.VARCHAR:
+            return cell.varcharVal;
+        case CellType.INTEGER:
+            return cell.intVal;
+        case CellType.BOOLEAN:
+            return cell.booleanVal;
+        case CellType.DOUBLE:
+            return cell.doubleVal;
+        case CellType.TEXT:
+            return cell.textVal;
+        default:
+            return ''
+    }
+};
