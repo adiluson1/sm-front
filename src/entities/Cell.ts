@@ -42,3 +42,20 @@ export const getCellValue = (cell: Cell) => {
             return ''
     }
 };
+
+export const getCellKey = (cell: Cell) => {
+    switch (cell.column.cellType) {
+        case CellType.VARCHAR:
+            return 'varcharVal';
+        case CellType.INTEGER:
+            return 'intVal';
+        case CellType.BOOLEAN:
+            return 'booleanVal';
+        case CellType.DOUBLE:
+            return 'doubleVal';
+        case CellType.TEXT:
+            return 'textVal';
+        default:
+            return ''
+    }
+};

@@ -7,7 +7,6 @@ import {Observer} from "mobx-vue";
 import {TemplateMobx, TemplateStore} from "@/store/Template";
 import { TemplateTable} from "@/components/Table/TemplateTable";
 import ShowExcelWorkbook from "@/components/Excel/ShowExcelWorkbook";
-import MainWorkerPrivider from "@/worker/providers/MainWorkerProvider";
 
 
 
@@ -56,6 +55,12 @@ export default class One extends Vue {
         load.close();
     }
 
+    async uploadFromExcel () {
+        let load = this.$buefy.loading.open({});
+        await this.store.addFromExcel();
+        load.close();
+    }
+
     render() {
         return(
             <div>
@@ -93,6 +98,11 @@ export default class One extends Vue {
                         <div class="column is-2">
                             <b-button onclick = {this.writeToExcel}>
                                     write to excel
+                            </b-button>
+                        </div>
+                        <div class="column is-2">
+                            <b-button onclick = {this.uploadFromExcel}>
+                                upload from excel
                             </b-button>
                         </div>
                     </div>

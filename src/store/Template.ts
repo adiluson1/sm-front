@@ -6,11 +6,15 @@ import {Cell} from "@/entities/Cell";
 import {routes} from "@/service/routes";
 import {Server} from "@/service/Server";
 import MainWorkerPrivider from "@/worker/providers/MainWorkerProvider";
-import {ApiToExcelAdapterWorker} from "@/worker";
+import {
+    ApiToExcelAdapterWorker,
+    ExcelToApiAdapterWorker
+} from "@/worker";
 import {Col} from "@/entities/Col";
-import {ApiToExcelAdapterWorkerProps} from "@/props/ApiToExcelAdapterWorkerProps";
-import context = Office.context;
 import {getCurrentDateStr} from "@/functions/Date";
+import {getActiveRangeValues} from "@/functions/Excel";
+
+
 
 
 export class TemplateMobx {
@@ -193,6 +197,22 @@ export class TemplateMobx {
             range.values = result;
             await range.context.sync();
         })
+    }
+    @action.bound
+    async addFromExcel() {
+        let excelValues = await getActiveRangeValues();
+        let template = toJS(this.template,{recurseEverything: true});
+        let oldRows = toJS(this.rows.items,{recurseEverything:true});
+        let provider = new MainWorkerPrivider();
+        let worker = new ExcelToApiAdapterWorker();
+        let rows = await provider.connect(
+            worker, {
+            data: excelValues,
+            template,
+            oldRows
+        });
+        await Server.put(routes.rows,rows);
+        await this.getRowsByTemplateId(this.template.id)
     }
 }
 
