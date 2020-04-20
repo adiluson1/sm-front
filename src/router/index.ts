@@ -38,6 +38,11 @@ const routes = [
             path: 'add-column',
             name: 'AddColumnForTemplate',
             component: (): any => import('@/views/Template/AddColumn')
+          },
+          {
+            path: 'choose-content',
+            name: 'ChooseContent',
+            component: (): any => import('@/views/Template/ChooseContent')
           }
         ]
       }
@@ -63,7 +68,6 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 });

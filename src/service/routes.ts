@@ -4,5 +4,8 @@ export const routes = {
   dictionaries: 'dictionaries',
   columns: "columns",
   rows: 'rows',
-  cells: 'cells'
+  cells: 'cells',
+  cell: {
+    createLink: 'cells/create-link'
+  }
 };

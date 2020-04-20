@@ -27,8 +27,8 @@ export default class One extends Vue {
 
 
     async mounted() {
-        let id = this.$route.params.id;
-        await this.store.init(id);
+        let rowId = this.$route.params.id;
+        await this.store.init(rowId);
         console.log(toJS(this.store.rows))
     }
 
@@ -70,45 +70,6 @@ export default class One extends Vue {
                     onBack={() => this.$router.back()}>
                     {`${this.$t('template.template')}: ${this.store.template.name}`}
                 </head-component>
-                <card>
-                    <div class="level">
-                        <div class="level-left">
-                            <h5 class="subtitle">{this.$t('column.columns')}</h5>
-                        </div>
-                        <div class="level-right">
-                            <router-link
-                                to={`/template/${this.store.template.id}/add-column`}>
-                                <b-icon icon="plus"/>
-                            </router-link>
-                        </div>
-                    </div>
-                    <div class="columns">
-                        <div class="column is-2">
-                            {
-                                !this.store.newRow.cells.length &&
-                                <b-button onclick={this.store.addRow}>{this.$t('template.button.addRow')}</b-button>
-                            }
-                        </div>
-                        <div class="column is-2">
-                            <b-upload v-model={this.file}>
-                                <a class="button is-primary">
-                                    <b-icon icon="upload"></b-icon>
-                                    <span>Click to upload</span>
-                                </a>
-                            </b-upload>
-                        </div>
-                        <div class="column is-2">
-                            <b-button onclick = {this.writeToExcel}>
-                                    write to excel
-                            </b-button>
-                        </div>
-                        <div class="column is-2">
-                            <b-button onclick = {this.uploadFromExcel}>
-                                upload from excel
-                            </b-button>
-                        </div>
-                    </div>
-                </card>
                 <card>
                     {
                         Workbook.count ?

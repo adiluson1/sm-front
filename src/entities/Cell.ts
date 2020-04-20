@@ -15,13 +15,17 @@ export class Cell {
     public row: Row;
     public column: Col;
     public tree?: Tree;
-    template: Template;
+    public link: Row[];
+    public template: Template;
     public converterValue?: ConverterValue;
     public createdAt: string;
     public updatedAt: string;
 
     constructor() {
         this.column = new Col();
+        this.row = new Row();
+        this.template = new Template();
+        this.link = [];
     }
 
 }

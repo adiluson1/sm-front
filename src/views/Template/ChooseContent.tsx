@@ -20,17 +20,20 @@ import {toJS} from "mobx";
         ShowExcelWorkbook
     }
 })
-export default class One extends Vue {
+export default class ChooseContent extends Vue {
 
     file: File| null = null;
     store: TemplateMobx = TemplateStore;
 
 
+
     async mounted() {
         let id = this.$route.params.id;
         await this.store.init(id);
-        console.log(toJS(this.store.rows))
+
     }
+
+
 
 
     @Watch('file')
@@ -99,7 +102,7 @@ export default class One extends Vue {
                         </div>
                         <div class="column is-2">
                             <b-button onclick = {this.writeToExcel}>
-                                    write to excel
+                                write to excel
                             </b-button>
                         </div>
                         <div class="column is-2">

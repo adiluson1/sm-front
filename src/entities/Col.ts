@@ -25,8 +25,14 @@ export class Col {
     cellType: CellType;
     columnType: ColumnType;
     template: Template;
+    link: Template[];
     createdAt: string;
     updatedAt: string;
+
+    constructor() {
+        this.cellType = CellType.BOOLEAN;
+        this.link = [];
+    }
 }
 
 export const cellTypeStr = (cellType: CellType):string => {

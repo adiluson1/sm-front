@@ -6,7 +6,7 @@ export class Pagination<T> {
     next: string;
     previous: string;
 
-    constructor(items: T[]) {
+    constructor(items: T[] = []) {
         this.items = items
     }
 }

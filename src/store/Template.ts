@@ -19,7 +19,7 @@ import {getActiveRangeValues} from "@/functions/Excel";
 
 export class TemplateMobx {
     @observable template: Template = new Template();
-    @observable rows: Pagination<Row> = new Pagination<Row>([]);
+    @observable rows: Row[] = [];
     @observable newRow: Row = new Row();
     @observable hasNewRow: boolean = false;
 
@@ -69,7 +69,7 @@ export class TemplateMobx {
             this.rows = rows;
         });
         let newRows: Row[] = [];
-        for(let oldRow of this.rows.items) {
+        for(let oldRow of this.rows) {
             let cellMap = new Map();
             for (let cell of oldRow.cells) {
                 cellMap.set(cell.column.id,cell);
@@ -93,7 +93,7 @@ export class TemplateMobx {
             newRows.push(oldRow);
         }
         runInAction(() => {
-            this.rows.items = newRows
+            this.rows = newRows
         });
     }
 
@@ -140,7 +140,7 @@ export class TemplateMobx {
                 }
             }
             runInAction(() => {
-                this.rows.items.unshift(row);
+                this.rows.unshift(row);
                 this.newRow = new Row();
                 this.hasNewRow = false;
             });
@@ -181,7 +181,7 @@ export class TemplateMobx {
         let provider = new MainWorkerPrivider();
         let worker = new ApiToExcelAdapterWorker();
         let columns: Col[] = toJS(this.template.columns,{recurseEverything: true});
-        let rows = toJS(this.rows.items,{recurseEverything: true});
+        let rows = toJS(this.rows,{recurseEverything: true});
         let includes = columns.map(col => col.id);
         let args = {
             rows,
@@ -202,7 +202,7 @@ export class TemplateMobx {
     async addFromExcel() {
         let excelValues = await getActiveRangeValues();
         let template = toJS(this.template,{recurseEverything: true});
-        let oldRows = toJS(this.rows.items,{recurseEverything:true});
+        let oldRows = toJS(this.rows,{recurseEverything:true});
         let provider = new MainWorkerPrivider();
         let worker = new ExcelToApiAdapterWorker();
         let rows = await provider.connect(

@@ -7,6 +7,7 @@ import TableInput from "@/components/Table/TableInput";
 import Card from "@/components/Card";
 import {Pagination} from "@/service/Pagination";
 import {getCurrentDateStr} from "@/functions/Date";
+import {TemplateService} from "@/service/TemplateService";
 
 @Component({
     components: {
@@ -24,8 +25,7 @@ export default class All extends Vue {
     }
 
     async init() {
-        let res = await Server.get(routes.templates);
-        this.templates = await res.json();
+        this.templates = await TemplateService.all();
     }
 
     async delete(id: number) {
