@@ -7,7 +7,9 @@ import {Observer} from "mobx-vue";
 import {TemplateMobx, TemplateStore} from "@/store/Template";
 import { TemplateTable} from "@/components/Table/TemplateTable";
 import ShowExcelWorkbook from "@/components/Excel/ShowExcelWorkbook";
-import {toJS} from "mobx";
+import {Cell} from "@/entities/Cell";
+import {Server} from "@/service/Server";
+import {routes} from "@/service/routes";
 
 
 
@@ -24,13 +26,29 @@ export default class ChooseContent extends Vue {
 
     file: File| null = null;
     store: TemplateMobx = TemplateStore;
+    cell: Cell = new Cell();
 
 
 
     async mounted() {
+        let load = this.$buefy.loading.open({});
         let id = this.$route.params.id;
+        if ('cell' in this.$route.query){
+            let cellId = Number(this.$route.query.cell);
+            if (cellId) {
+                let res = await Server.get(routes.cells + `/${cellId}`);
+                this.cell = await res.json();
+            } else {
+                let cell = new Cell();
+                cell.column.id = Number(this.$route.query.column);
+                cell.id = Number(this.$route.query.cell);
+                cell.template.id = Number(this.$route.query.template);
+                cell.row.id = Number(this.$route.query.row);
+                this.cell = cell;
+            }
+        }
         await this.store.init(id);
-
+        load.close()
     }
 
 
@@ -120,10 +138,10 @@ export default class ChooseContent extends Vue {
                                     <show-excel-workbook/>
                                 </div>
                                 <div class="column is-half">
-                                    <template-table/>
+                                    <template-table select={true} cell={this.cell}/>
                                 </div>
                             </div>
-                            : <template-table/>
+                            : <template-table select={true} cell={this.cell}/>
                     }
 
                 </card>

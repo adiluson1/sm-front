@@ -41,30 +41,15 @@ export class TemplateMobx {
         await this.getRowsByTemplateId(id);
     }
 
+
+
     @action.bound
-    addRow() {
-        const length = this.newRow.cells.length;
-        if (!length) {
-            let row: Cell[] = [];
-            for (let column of  this.template.columns) {
-                let cell = new Cell();
-                cell.row = new Row();
-                cell.column = column;
-                cell.template = this.template;
-                row.push(cell)
-            }
-            runInAction(() =>{
-                this.newRow.cells = row;
-                this.hasNewRow = true;
-            })
-        }
+    setTemplate(template: Template) {
+        runInAction(() => this.template = template)
     }
 
     @action.bound
-    async getRowsByTemplateId(templateId: number | string) {
-        let url = routes.rows + `?templateid=${templateId}`;
-        let res =  await Server.get(url);
-        let rows = await res.json();
+    initRows(rows: Row[]) {
         runInAction(() => {
             this.rows = rows;
         });
@@ -95,6 +80,38 @@ export class TemplateMobx {
         runInAction(() => {
             this.rows = newRows
         });
+    }
+
+    @action.bound
+    addRow() {
+        const length = this.newRow.cells.length;
+        if (!length) {
+            let row: Cell[] = [];
+            for (let column of  this.template.columns) {
+                let cell = new Cell();
+                cell.row = new Row();
+                cell.column = column;
+                cell.template = this.template;
+                row.push(cell)
+            }
+            this.setCellsToNewRow(row)
+        }
+    }
+
+    @action.bound
+    setCellsToNewRow(cells: Cell[] = []) {
+        runInAction(() =>{
+            this.newRow.cells = cells;
+            this.hasNewRow = (cells.length > 0);
+        })
+    }
+
+    @action.bound
+    async getRowsByTemplateId(templateId: number | string) {
+        let url = routes.rows + `?templateid=${templateId}`;
+        let res =  await Server.get(url);
+        let rows = await res.json();
+        this.initRows(rows)
     }
 
     @action.bound

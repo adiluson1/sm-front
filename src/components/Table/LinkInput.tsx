@@ -1,10 +1,10 @@
 import {Component, Prop, Vue, Watch} from "vue-property-decorator";
 import {Cell} from "@/entities/Cell";
-import {routes} from "@/service/routes";
-import {Server} from "@/service/Server";
 import {Row} from "@/entities/Row";
+import {Observer} from "mobx-vue";
+import {TemplateMobx, TemplateStore} from "@/store/Template";
 
-
+@Observer
 @Component
 export default class LinkInput extends Vue{
 
@@ -12,6 +12,7 @@ export default class LinkInput extends Vue{
     value: Cell;
     localValue: Cell = new Cell();
     link: Row = new Row();
+    store: TemplateMobx = TemplateStore;
 
     mounted() {
         this.localValue = this.value;
@@ -23,26 +24,21 @@ export default class LinkInput extends Vue{
         this.localValue = val;
     }
 
-    async createEmptyCellLink() {
-        let cell = this.localValue;
-        let response = await Server.post(routes.cells,cell);
-        let savedCell = await response.json();
-        let templateId = 0;
-        let column = this.localValue.column;
-        if (column.link.length) {
-            let link = column.link[0];
-            templateId = link.id;
-        }
-        let link = `/template/${templateId}/choose-content?cell=${savedCell.id}`;
-        await this.$router.push(link)
-    }
+    async createOrUpdate() {
+        let templateId = this.localValue.template.id;
+        let columnId = this.localValue.column.id;
+        let cellId = this.localValue.id;
+        let rowId = this.localValue.row.id;
+        let id = 0;
 
-    get showRowLink() {
-        let link = this.localValue.link;
-        let result = '';
-        if (link.length)
-            result = `/row?id=${link[0].id}`;
-        return result;
+        let column = this.store.template.columns.find(col=> col.id === columnId);
+        if (column && column.link.length) {
+            let link = column.link[0];
+            id = link.id;
+        }
+        let link = `/template/${id}/choose-content?cell=${cellId}&template=${templateId}&column=${columnId}&row=${rowId}`;
+        this.store.setCellsToNewRow([]);
+        await this.$router.push(link)
     }
 
     render() {
@@ -50,16 +46,16 @@ export default class LinkInput extends Vue{
                 {
                     this.localValue.link.length > 0 ?
                         <div class="buttons">
-                            <router-link to={this.showRowLink} class="button">
+                            <button class="button" onclick={this.createOrUpdate}>
                                 <b-icon icon="eye"/>
-                            </router-link>
+                            </button>
                             <button class="button" onclick={() => this.$emit('remove',this.localValue)}>
                                 <b-icon icon="delete-outline"/>
                             </button>
                         </div>
                         :
                         <div class="buttons">
-                            <span onclick={this.createEmptyCellLink}>empty</span>
+                            <span onclick={this.createOrUpdate}>empty</span>
                         </div>
                 }
         </div>)

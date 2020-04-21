@@ -7,48 +7,68 @@ import {Cell} from "@/entities/Cell";
 import {Row} from "@/entities/Row";
 import {Server} from "@/service/Server";
 import {routes} from "@/service/routes";
+import VirtualList from "vue-virtual-scroll-list"
+import {PropType} from "vue";
 
 @Observer
 @Component({
     components:{
         TableInput,
-        CellInput
+        CellInput,
+        'virtual-scroll': VirtualList
     }
 })
 export class TemplateTable extends Vue {
 
-    cellId: any = 0;
+    @Prop({type: Boolean, default: false})
+    readonly select: boolean;
+    @Prop({type: Object as PropType<Cell>,default: new Cell()})
+    cell: Cell;
     store: TemplateMobx = TemplateStore;
     rowId: number = 0;
 
-    mounted() {
-        this.cellId = this.$route.query.cell;
+    async mounted() {
+        console.log(this.cell);
+        if (this.select && this.cell.id) {
+            let link = this.cell.link[0];
+            this.rowId = link.id;
+            console.log(this.rowId)
+        }
     }
 
-    @Watch('rowId')
+    @Watch('cell')
+    onCellChanged(cell: Cell) {
+        if (this.select && cell.id) {
+            let link = cell.link[0];
+            this.rowId = link.id;
+            console.log(this.rowId)
+        }
+    }
+
+    //@Watch('rowId')
     async onRowIdChanged(rowId: number) {
         let load = this.$buefy.loading.open({});
-        let cell = new Cell();
-        cell.id = this.cellId;
+        let cell = JSON.parse(JSON.stringify(this.cell));
         let row = new Row();
-        row.id = this.rowId;
-        cell.link.push(row);
+        row.id = rowId;
+        cell.link = [row];
         let res = await Server.post(routes.cell.createLink,cell);
         res = await res.json();
+        load.close();
         if (res.ok) {
             this.$router.back();
         }
-        load.close()
     }
 
 
     render() {
         return(
             <b-field>
+                <virtual-scroll size={40} remain={20}>
             <table class="table">
                 <tr>
                     {
-                        this.cellId > 0 &&
+                        this.select &&
                         <th>Choose row</th>
                     }
                     {
@@ -81,13 +101,14 @@ export class TemplateTable extends Vue {
                         }
                     </tr>
                 }
+
                 {
                     this.store.rows.map(row=> {
                         return <tr>
                             {
-                                this.cellId > 0 &&
+                                this.select &&
                                 <td>
-                                    <b-radio v-model={this.rowId}  native-value={row.id} />
+                                    <b-radio v-model={this.rowId}  native-value={row.id} oninput={() => this.onRowIdChanged(row.id)}/>
                                 </td>
                             }
                             {
@@ -105,6 +126,7 @@ export class TemplateTable extends Vue {
                     })
                 }
             </table>
+                </virtual-scroll>
             </b-field>
         )
     }

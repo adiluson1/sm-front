@@ -8,6 +8,7 @@ import {TemplateMobx, TemplateStore} from "@/store/Template";
 import { TemplateTable} from "@/components/Table/TemplateTable";
 import ShowExcelWorkbook from "@/components/Excel/ShowExcelWorkbook";
 import {toJS} from "mobx";
+import {Cell} from "@/entities/Cell";
 
 
 
@@ -27,9 +28,10 @@ export default class One extends Vue {
 
 
     async mounted() {
+        let load = this.$buefy.loading.open({});
         let id = this.$route.params.id;
         await this.store.init(id);
-        console.log(toJS(this.store.rows))
+        load.close()
     }
 
 
@@ -117,10 +119,10 @@ export default class One extends Vue {
                                     <show-excel-workbook/>
                                 </div>
                                 <div class="column is-half">
-                                    <template-table/>
+                                    <template-table cell={new Cell()}/>
                                 </div>
                             </div>
-                            : <template-table/>
+                            : <template-table cell={new Cell()}/>
                     }
 
                 </card>
